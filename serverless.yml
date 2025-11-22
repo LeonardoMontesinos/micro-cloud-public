@@ -1,0 +1,46 @@
+org: lucianayc
+service: products-public-api
+
+custom:
+  pythonRequirements:
+    pythonBin: python3
+
+provider:
+  name: aws
+  runtime: python3.12
+  timeout: 30
+  memorySize: 256
+  region: us-east-1
+  stage: dev
+  iam:
+    role: arn:aws:iam::131515946730:role/LabRole
+  environment:
+    PRODUCTOS_TABLE: ProductosTable
+
+functions:
+  getAllProducts:
+    handler: handlers.get_all_products
+    events:
+      - http:
+          path: productos
+          method: get
+          cors: true
+
+  getProductsByCategory:
+    handler: handlers.get_products_by_category
+    events:
+      - http:
+          path: productos/categoria/{categoria}
+          method: get
+          cors: true
+
+  getProductById:
+    handler: handlers.get_product_by_id
+    events:
+      - http:
+          path: productos/{id}
+          method: get
+          cors: true
+
+plugins:
+  - serverless-python-requirements
